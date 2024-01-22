@@ -27,7 +27,7 @@ class Usuario
     private ?string $nick = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $contrasdeña = null;
+    private ?string $contrasenya = null;
 
     #[ORM\Column(length: 50)]
     private ?string $correo = null;
