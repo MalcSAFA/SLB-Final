@@ -27,7 +27,7 @@ class Usuario
     private ?string $nick = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $contrasdeña = null;
+    private ?string $contrasenya = null;
 
     #[ORM\Column(length: 50)]
     private ?string $correo = null;
@@ -88,14 +88,14 @@ class Usuario
         return $this;
     }
 
-    public function getContrasdeña(): ?string
+    public function getContrasenya(): ?string
     {
-        return $this->contrasdeña;
+        return $this->contrasenya;
     }
 
-    public function setContrasdeña(string $contrasdeña): static
+    public function setContrasenya(string $contrasenya): static
     {
-        $this->contrasdeña = $contrasdeña;
+        $this->contrasenya = $contrasenya;
 
         return $this;
     }
