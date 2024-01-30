@@ -8,7 +8,13 @@ use App\Entity\Seguidores;
 use App\Entity\Usuario;
 use App\Repository\NotificacionesRepository;
 use App\Repository\SeguidoresRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api/seguidores')]
 class SeguidoresController
 {
     #[Route('', name: "seguidores_list", methods: ["GET"])]
@@ -23,7 +29,7 @@ class SeguidoresController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $nuevoseguidor = new Clase();
+        $nuevoseguidor = new Seguidores();
         $nuevoseguidor->setSeguidores($json["seguidores"]);
         $nuevoseguidor->setSeguidos($json["seguidos"]);
 
@@ -40,12 +46,11 @@ class SeguidoresController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $seguidores = new Clase();
         $seguidores->setSeguidores($json["seguidores"]);
         $seguidores->setSeguidos($json["seguidos"]);
 
         $perfil = $entityManager->getRepository(Perfil::class)->findBy(["id"=> $json["id_perfil"]]);
-        $seguidores->setTweet($perfil[0]);
+        $seguidores->setPerfil($perfil[0]);
 
 
         $entityManager->flush();

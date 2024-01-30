@@ -6,7 +6,7 @@ use App\Repository\RtUsuarioRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RtUsuarioRepository::class)]
-#[ORM\Table(name: "rt_usuario",schema: "agitane")]
+#[ORM\Table(name: "rt_usuario",schema: "Agitane")]
 class RtUsuario
 {
     #[ORM\Id]

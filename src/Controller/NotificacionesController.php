@@ -6,7 +6,13 @@ use App\Entity\Notificaciones;
 use App\Entity\Tweets;
 use App\Entity\Usuario;
 use App\Repository\NotificacionesRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api/notificaciones')]
 class NotificacionesController
 {
     #[Route('', name: "notificaciones_list", methods: ["GET"])]
@@ -21,7 +27,7 @@ class NotificacionesController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $nuevanotificacion = new Clase();
+        $nuevanotificacion = new Notificaciones();
         $nuevanotificacion->setTipoNotificacion($json["tipo"]);
         $nuevanotificacion->setVisto($json["visto"]);
 
@@ -42,15 +48,14 @@ class NotificacionesController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $notificaciones = new Clase();
         $notificaciones->setTipoNotificacion($json["tipo"]);
         $notificaciones->setVisto($json["visto"]);
 
         $usuarioEm = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuarioEm"]]);
-        $notificaciones->setTweet($usuarioEm[0]);
+        $notificaciones->setUsuarioEmisor($usuarioEm[0]);
 
         $usuarioRe = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuarioRe"]]);
-        $notificaciones->setTweet($usuarioRe[0]);
+        $notificaciones->setUsuarioReceptor($usuarioRe[0]);
 
         $entityManager->flush();
 

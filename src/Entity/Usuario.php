@@ -7,10 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
-#[ORM\Table(name: "usuario",schema: "agitane")]
-class Usuario
+#[ORM\Table(name: "usuario",schema: "Agitane")]
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,6 +39,9 @@ class Usuario
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $fecha_nacimiento = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $rol = null;
 
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Tweets::class)]
     #[ORM\JoinColumn(name: "id_tweet", nullable: false)]
@@ -135,6 +140,17 @@ class Usuario
 
         return $this;
     }
+    public function getRol(): ?string
+    {
+        return $this->rol;
+    }
+
+    public function setRol(string $rol): static
+    {
+        $this->rol = $rol;
+
+        return $this;
+    }
 
     /**
      * @return Collection<int, Tweets>
@@ -164,5 +180,28 @@ class Usuario
         }
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this -> contrasenya;
+    }
+
+    public function getRoles(): array
+    {
+        // TODO: Implement getRoles() method.
+        $roles = [];
+        $roles[] = $this->getRol();
+        return $roles;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this ->getNick();
     }
 }

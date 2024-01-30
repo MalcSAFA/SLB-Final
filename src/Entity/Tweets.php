@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TweetsRepository::class)]
-#[ORM\Table(name: "tweets",schema: "agitane")]
+#[ORM\Table(name: "tweets",schema: "Agitane")]
 class Tweets
 {
     #[ORM\Id]
@@ -24,9 +24,6 @@ class Tweets
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $fecha_publicacion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tweets')]
-    #[ORM\JoinColumn(name: "id_usuario", nullable: false)]
-    private ?Usuario $usuario = null;
 
     public function getId(): ?int
     {
@@ -69,15 +66,4 @@ class Tweets
         return $this;
     }
 
-    public function getUsuario(): ?Usuario
-    {
-        return $this->usuario;
-    }
-
-    public function setUsuario(?Usuario $usuario): static
-    {
-        $this->usuario = $usuario;
-
-        return $this;
-    }
 }

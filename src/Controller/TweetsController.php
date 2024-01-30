@@ -5,8 +5,15 @@ namespace App\Controller;
 use App\Entity\Tweets;
 use App\Entity\Usuario;
 use App\Repository\TweetsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class TweetsController
+#[Route('/api/tweets')]
+class TweetsController extends AbstractController
 {
     #[Route('', name: "tweet_list", methods: ["GET"])]
     public function list_usuario(TweetsRepository $tweetsRepository):JsonResponse
@@ -20,13 +27,13 @@ class TweetsController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $nuevotweet = new Clase();
+        $nuevotweet = new Tweets();
         $nuevotweet->setTexto($json["texto"]);
         $nuevotweet->setLink($json["link"]);
         $nuevotweet->setFechaPublicacion($json["fecha_publicacion"]);
 
         $usuario = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuario"]]);
-        $nuevotweet->setTweet($usuario[0]);
+        $nuevotweet->setUsuario($usuario[0]);
 
 
         $entityManager->persist($nuevotweet);
@@ -39,13 +46,12 @@ class TweetsController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $tweets = new Clase();
         $tweets->setTexto($json["texto"]);
         $tweets->setLink($json["link"]);
         $tweets->setFechaPublicacion($json["fecha_publicacion"]);
 
         $usuario = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuario"]]);
-        $tweets->seTweet($usuario[0]);
+        $tweets->setUsuario($usuario[0]);
 
         $entityManager->flush();
 

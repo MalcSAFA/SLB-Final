@@ -7,7 +7,13 @@ use App\Entity\Tweets;
 use App\Entity\Usuario;
 use App\Repository\PerfilRepository;
 use App\Repository\TweetsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api/perfil')]
 class PerfilController
 {
     #[Route('', name: "perfil_list", methods: ["GET"])]
@@ -22,7 +28,7 @@ class PerfilController
     {
         $json = json_decode($request-> getContent(), true);
 
-        $nuevoperfil = new Clase();
+        $nuevoperfil = new Perfil();
         $nuevoperfil->setSubidas($json["subidas"]);
         $nuevoperfil->setEstado($json["estado"]);
 

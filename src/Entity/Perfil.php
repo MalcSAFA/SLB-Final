@@ -6,7 +6,7 @@ use App\Repository\PerfilRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PerfilRepository::class)]
-#[ORM\Table(name:"perfil", schema: "agitane")]
+#[ORM\Table(name:"perfil", schema: "Agitane")]
 class Perfil
 {
     #[ORM\Id]
