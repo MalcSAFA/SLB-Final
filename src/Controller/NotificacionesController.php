@@ -7,13 +7,14 @@ use App\Entity\Tweets;
 use App\Entity\Usuario;
 use App\Repository\NotificacionesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/notificaciones')]
-class NotificacionesController
+class NotificacionesController extends AbstractController
 {
     #[Route('', name: "notificaciones_list", methods: ["GET"])]
     public function list_notificaciones(NotificacionesRepository $notificacionesRepository):JsonResponse
@@ -31,11 +32,11 @@ class NotificacionesController
         $nuevanotificacion->setTipoNotificacion($json["tipo"]);
         $nuevanotificacion->setVisto($json["visto"]);
 
-        $usuarioEm = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuarioEm"]]);
-        $nuevanotificacion->setTweet($usuarioEm[0]);
+        $usuarioEm = $entityManager->getRepository(Usuario::class)->findOneBy(["id"=> $json["id_usuarioEm"]]);
+        $nuevanotificacion->setUsuarioEmisor($usuarioEm);
 
-        $usuarioRe = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuarioRe"]]);
-        $nuevanotificacion->setTweet($usuarioRe[0]);
+        $usuarioRe = $entityManager->getRepository(Usuario::class)->findOneBy(["id"=> $json["id_usuarioRe"]]);
+        $nuevanotificacion->setUsuarioReceptor($usuarioRe);
 
 
         $entityManager->persist($nuevanotificacion);

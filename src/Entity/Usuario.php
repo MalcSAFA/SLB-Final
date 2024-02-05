@@ -43,9 +43,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $rol = null;
 
-    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Tweets::class)]
-    #[ORM\JoinColumn(name: "id_tweet", nullable: false)]
-    private Collection $tweets;
+
 
     public function __construct()
     {
@@ -152,35 +150,6 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Tweets>
-     */
-    public function getTweets(): Collection
-    {
-        return $this->tweets;
-    }
-
-    public function addTweet(Tweets $tweet): static
-    {
-        if (!$this->tweets->contains($tweet)) {
-            $this->tweets->add($tweet);
-            $tweet->setUsuario($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTweet(Tweets $tweet): static
-    {
-        if ($this->tweets->removeElement($tweet)) {
-            // set the owning side to null (unless already changed)
-            if ($tweet->getUsuario() === $this) {
-                $tweet->setUsuario(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getPassword(): ?string
     {

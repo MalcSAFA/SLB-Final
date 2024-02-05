@@ -18,7 +18,7 @@ class Rt
     private ?int $recuento = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: "usuario", nullable: false)]
+    #[ORM\JoinColumn(name: "id_usuario", nullable: false)]
     private ?Usuario $usuario = null;
 
     #[ORM\ManyToOne]

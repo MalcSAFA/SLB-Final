@@ -24,6 +24,10 @@ class Tweets
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $fecha_publicacion = null;
 
+    #[ORM\ManyToOne( targetEntity: Usuario::class)]
+    #[ORM\JoinColumn(name: "id_usuario", nullable: false)]
+    private Usuario $usuario;
+
 
     public function getId(): ?int
     {
@@ -65,5 +69,17 @@ class Tweets
 
         return $this;
     }
+
+    public function getUsuario(): Usuario
+    {
+        return $this->usuario;
+    }
+
+    public function setUsuario(Usuario $usuario): void
+    {
+        $this->usuario = $usuario;
+    }
+
+
 
 }

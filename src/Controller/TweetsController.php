@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Tweets;
 use App\Entity\Usuario;
 use App\Repository\TweetsRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,10 +31,11 @@ class TweetsController extends AbstractController
         $nuevotweet = new Tweets();
         $nuevotweet->setTexto($json["texto"]);
         $nuevotweet->setLink($json["link"]);
-        $nuevotweet->setFechaPublicacion($json["fecha_publicacion"]);
+        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
+        $nuevotweet->setFechaPublicacion($fechaPublicacion);
 
-        $usuario = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuario"]]);
-        $nuevotweet->setUsuario($usuario[0]);
+        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
+        $nuevotweet->setUsuario($usuario);
 
 
         $entityManager->persist($nuevotweet);
@@ -48,10 +50,11 @@ class TweetsController extends AbstractController
 
         $tweets->setTexto($json["texto"]);
         $tweets->setLink($json["link"]);
-        $tweets->setFechaPublicacion($json["fecha_publicacion"]);
+        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
+        $tweets->setFechaPublicacion($fechaPublicacion);
 
-        $usuario = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuario"]]);
-        $tweets->setUsuario($usuario[0]);
+        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
+        $tweets->setUsuario($usuario);
 
         $entityManager->flush();
 

@@ -32,10 +32,10 @@ class RespuestaController extends AbstractController
         $json = json_decode($request-> getContent(), true);
 
         $nuevarespuesta = new Respuestas();
-        $nuevarespuesta->setTweet($json["texto"]);
+        $nuevarespuesta->setTexto($json["texto"]);
 
-        $tweet = $entityManager->getRepository(Tweets::class)->findBy(["id"=> $json["id_tweet"]]);
-        $nuevarespuesta->setTweet($tweet[0]);
+        $tweet = $entityManager->getRepository(Tweets::class)->findOneBy(["id" => $json["id_tweet"]]);
+        $nuevarespuesta->setTweet($tweet);
 
         $entityManager->persist($nuevarespuesta);
         $entityManager->flush();
@@ -49,8 +49,8 @@ class RespuestaController extends AbstractController
 
         $respuestas->setTexto($json["texto"]);
 
-        $tweet = $entityManager->getRepository(Tweets::class)->findBy(["id"=> $json["id_tweet"]]);
-        $respuestas->setTweet($tweet[0]);
+        $tweet = $entityManager->getRepository(Tweets::class)->findOneBy(["id" => $json["id_tweet"]]);
+        $respuestas->setTweet($tweet);
 
         $entityManager->flush();
 

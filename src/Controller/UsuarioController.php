@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Tweets;
 use App\Entity\Usuario;
 use App\Repository\UsuarioRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,13 +28,22 @@ class UsuarioController extends AbstractController
     {
         $json = json_decode($request-> getContent(), true);
 
+        if (array_key_exists('rol', $json)) {
+            $rol = $json['rol'];
+        } else {
+            // Si la clave 'rol' no está presente, asignar un valor predeterminado o manejar el caso según tus necesidades
+            $rol = 'USER';
+        }
+
         $nuevousuario = new Usuario();
         $nuevousuario->setNombre($json["nombre"]);
         $nuevousuario->setApellido($json["apellido"]);
         $nuevousuario->setContrasenya($json["contrasenya"]);
         $nuevousuario->setCorreo($json["correo"]);
         $nuevousuario->setFoto($json["foto"]);
-        $nuevousuario->setFechaNacimiento($json["fecha_nacimiento"]);
+        $fechaNacimiento = new DateTime($json["fecha_nacimiento"]);
+        $nuevousuario->setFechaNacimiento($fechaNacimiento);
+        $nuevousuario->setRol($rol);
 
 
         $entityManager->persist($nuevousuario);
@@ -46,12 +56,19 @@ class UsuarioController extends AbstractController
     {
         $json = json_decode($request-> getContent(), true);
 
+        if (array_key_exists('rol', $json)) {
+            $rol = $json['rol'];
+        } else {
+            // Si la clave 'rol' no está presente, asignar un valor predeterminado o manejar el caso según tus necesidades
+            $rol = 'USER';
+        }
         $usuario->setNombre($json["nombre"]);
         $usuario->setApellido($json["apellido"]);
         $usuario->setContrasenya($json["contrasenya"]);
         $usuario->setCorreo($json["correo"]);
         $usuario->setFoto($json["foto"]);
-        $usuario->setFecha_nacimiento($json["fecha_nacimiento"]);
+        $usuario->setFechanacimiento($json["fecha_nacimiento"]);
+        $usuario->setRol($rol);
 
 
         $entityManager->flush();

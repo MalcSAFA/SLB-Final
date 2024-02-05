@@ -8,13 +8,14 @@ use App\Entity\Seguidores;
 use App\Repository\LikesRepository;
 use App\Repository\NotificacionesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/likes')]
-class LikesController
+class LikesController extends AbstractController
 {
     #[Route('', name: "likes_list", methods: ["GET"])]
     public function list_likes(LikesRepository $likesRepository):JsonResponse

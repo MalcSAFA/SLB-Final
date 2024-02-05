@@ -7,11 +7,12 @@ use App\Entity\Rt;
 use App\Repository\LikesRepository;
 use App\Repository\RtRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api/rt')]
-class RTController
+class RTController extends AbstractController
 {
     #[Route('', name: "rt_list", methods: ["GET"])]
     public function list_rt(RtRepository $rtRepository):JsonResponse

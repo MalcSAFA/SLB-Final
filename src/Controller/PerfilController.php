@@ -8,13 +8,14 @@ use App\Entity\Usuario;
 use App\Repository\PerfilRepository;
 use App\Repository\TweetsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/perfil')]
-class PerfilController
+class PerfilController extends AbstractController
 {
     #[Route('', name: "perfil_list", methods: ["GET"])]
     public function list_perfil(PerfilRepository $perfilRepository):JsonResponse
@@ -28,15 +29,16 @@ class PerfilController
     {
         $json = json_decode($request-> getContent(), true);
 
+
         $nuevoperfil = new Perfil();
         $nuevoperfil->setSubidas($json["subidas"]);
         $nuevoperfil->setEstado($json["estado"]);
 
-        $usuario = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuario"]]);
-        $nuevoperfil->setUsuario($usuario[0]);
+        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id"=> $json["id_usuario"]]);
+        $nuevoperfil->setUsuario($usuario);
 
-        $tweet = $entityManager->getRepository(Tweets::class)->findBy(["id"=> $json["id_tweet"]]);
-        $nuevoperfil->setTweet($tweet[0]);
+        $tweet = $entityManager->getRepository(Tweets::class)->findOneBy(["id"=> $json["id_tweet"]]);
+        $nuevoperfil->setTweets($tweet);
 
 
         $entityManager->persist($nuevoperfil);
