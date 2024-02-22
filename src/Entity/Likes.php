@@ -6,7 +6,7 @@ use App\Repository\LikesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LikesRepository::class)]
-#[ORM\Table(name: "Likes",schema: "Agitane")]
+#[ORM\Table(name: "Likes",schema: "public")]
 class Likes
 {
     #[ORM\Id]

@@ -6,7 +6,7 @@ use App\Repository\SeguidoresRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeguidoresRepository::class)]
-#[ORM\Table(name: "seguidores",schema: "Agitane")]
+#[ORM\Table(name: "seguidores",schema: "public")]
 class Seguidores
 {
     #[ORM\Id]
