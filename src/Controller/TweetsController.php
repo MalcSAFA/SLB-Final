@@ -31,7 +31,7 @@ class TweetsController extends AbstractController
         $nuevotweet = new Tweets();
         $nuevotweet->setTexto($json["texto"]);
         $nuevotweet->setLink($json["link"]);
-        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
+        $fechaPublicacion = new DateTime(datetime: 'now');
         $nuevotweet->setFechaPublicacion($fechaPublicacion);
 
         $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
