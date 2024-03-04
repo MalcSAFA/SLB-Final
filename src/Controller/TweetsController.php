@@ -43,30 +43,38 @@ class TweetsController extends AbstractController
 
         return $this->json(['message' => 'Clase creada'], Response::HTTP_CREATED);
     }
-    #[Route('/{id}', name: "editar_tweet", methods: ["PUT"])]
-    public function editar_tweet(EntityManagerInterface $entityManager, Request $request, Tweets $tweets):JsonResponse
+//    #[Route('/{id}', name: "editar_tweet", methods: ["PUT"])]
+//    public function editar_tweet(EntityManagerInterface $entityManager, Request $request, Tweets $tweets):JsonResponse
+//    {
+//        $json = json_decode($request-> getContent(), true);
+//
+//        $tweets->setTexto($json["texto"]);
+//        $tweets->setLink($json["link"]);
+//        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
+//        $tweets->setFechaPublicacion($fechaPublicacion);
+//
+//        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
+//        $tweets->setUsuario($usuario);
+//
+//        $entityManager->flush();
+//
+//        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
+//    }
+    #[Route('/{id}', name: "api_delete_by_id", methods: ["DELETE"])]
+    public function deleteById_tweet(EntityManagerInterface $entityManager, int $id): JsonResponse
     {
-        $json = json_decode($request-> getContent(), true);
+        // Buscar el tweet en la base de datos
+        $tweets = $entityManager->getRepository(Tweets::class)->find($id);
 
-        $tweets->setTexto($json["texto"]);
-        $tweets->setLink($json["link"]);
-        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
-        $tweets->setFechaPublicacion($fechaPublicacion);
+        // Verificar si se encontró el tweet
+        if (!$tweets) {
+            return $this->json(['message' => 'No se encontró el tweet con el ID proporcionado'], Response::HTTP_NOT_FOUND);
+        }
 
-        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
-        $tweets->setUsuario($usuario);
-
-        $entityManager->flush();
-
-        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
-    }
-    #[Route('/{id}', name: "delete_by_id", methods: ["DELETE"])]
-    public function deleteById_tweet(EntityManagerInterface $entityManager, Tweets $tweets):JsonResponse
-    {
+        // Eliminar el tweet
         $entityManager->remove($tweets);
         $entityManager->flush();
 
-        return $this->json(['message' => 'Clase eliminada'], Response::HTTP_OK);
-
+        return $this->json(['message' => 'Tweet eliminado correctamente'], Response::HTTP_OK);
     }
 }
