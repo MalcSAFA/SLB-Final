@@ -19,9 +19,24 @@ class TweetsController extends AbstractController
     #[Route('', name: "tweet_list", methods: ["GET"])]
     public function list_usuario(TweetsRepository $tweetsRepository):JsonResponse
     {
-        $list = $tweetsRepository->findAll();
+        // Obtener todos los tweets ordenados por ID de manera descendente
+        $tweets = $tweetsRepository->findBy([], ['id' => 'DESC']);
 
-        return $this->json($list);
+        // Formatear manualmente las fechas y horas
+        $formattedTweets = [];
+        foreach ($tweets as $tweet) {
+            $formattedTweets[] = [
+                'id' => $tweet->getId(),
+                'texto' => $tweet->getTexto(),
+                'link' => $tweet->getLink(),
+                'fechaPublicacion' => $tweet->getFechaPublicacion()->format('H:i - Y-m-d'), // Formatear la fecha y hora
+                'usuario' => $tweet->getUsuario(),
+
+
+            ];
+        }
+
+        return $this->json($formattedTweets);
     }
     #[Route('', name: "crear_tweet", methods: ["POST"])]
     public function crear_tweet(EntityManagerInterface $entityManager, Request $request):JsonResponse
