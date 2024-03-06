@@ -58,23 +58,23 @@ class TweetsController extends AbstractController
 
         return $this->json(['message' => 'Clase creada'], Response::HTTP_CREATED);
     }
-//    #[Route('/{id}', name: "editar_tweet", methods: ["PUT"])]
-//    public function editar_tweet(EntityManagerInterface $entityManager, Request $request, Tweets $tweets):JsonResponse
-//    {
-//        $json = json_decode($request-> getContent(), true);
-//
-//        $tweets->setTexto($json["texto"]);
-//        $tweets->setLink($json["link"]);
-//        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
-//        $tweets->setFechaPublicacion($fechaPublicacion);
-//
-//        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
-//        $tweets->setUsuario($usuario);
-//
-//        $entityManager->flush();
-//
-//        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
-//    }
+    #[Route('/{id}', name: "editar_tweet", methods: ["PUT"])]
+    public function editar_tweet(EntityManagerInterface $entityManager, Request $request, Tweets $tweets):JsonResponse
+    {
+        $json = json_decode($request-> getContent(), true);
+
+        $tweets->setTexto($json["texto"]);
+        $tweets->setLink($json["link"]);
+        $fechaPublicacion = new DateTime($json["fecha_publicacion"]);
+        $tweets->setFechaPublicacion($fechaPublicacion);
+
+        $usuario = $entityManager->getRepository(Usuario::class)->findOneBy(["id" => $json["id_usuario"]]);
+        $tweets->setUsuario($usuario);
+
+        $entityManager->flush();
+
+        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
+    }
     #[Route('/{id}', name: "api_delete_by_id", methods: ["DELETE"])]
     public function deleteById_tweet(EntityManagerInterface $entityManager, int $id): JsonResponse
     {

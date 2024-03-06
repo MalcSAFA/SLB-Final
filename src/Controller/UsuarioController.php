@@ -17,11 +17,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class UsuarioController extends AbstractController
 {
     #[Route('', name: "usuario_list", methods: ["GET"])]
-    public function list_usuario(UsuarioRepository $usuarioRepository):JsonResponse
+    public function list_Usuarios(UsuarioRepository $usuarioRepository): JsonResponse
     {
-        $list = $usuarioRepository->findAll();
+        // Obtener todos los usuarios
+        $usuarios = $usuarioRepository->findAll();
 
-        return $this->json($list);
+        // Construir el array con los datos de los usuarios
+        $formattedUsuarios = [];
+        foreach ($usuarios as $usuario) {
+            $formattedUsuarios[] = [
+                'id' => $usuario->getId(),
+                'nombre' => $usuario->getNombre(),
+                'apellido' => $usuario->getApellido(),
+                'nick' => $usuario->getNick(),
+                'contrasenya' => $usuario->getContrasenya(),
+                'correo' => $usuario->getCorreo(),
+                'foto' => $usuario->getFoto(),
+                'fechaNacimiento' => $usuario->getFechaNacimiento()->format('Y-m-d'),
+                'rol' => $usuario->getRol(),
+            ];
+        }
+
+        // Devolver la respuesta JSON con los usuarios
+        return $this->json($formattedUsuarios);
     }
     #[Route('', name: "crear_usuario", methods: ["POST"])]
     public function crear_usuario(EntityManagerInterface $entityManager, Request $request):JsonResponse
@@ -52,28 +70,38 @@ class UsuarioController extends AbstractController
         return $this->json(['message' => 'Clase creada'], Response::HTTP_CREATED);
     }
     #[Route('/{id}', name: "editar_usuario", methods: ["PUT"])]
-    public function editar_usuario(EntityManagerInterface $entityManager, Request $request, Usuario $usuario):JsonResponse
+    public function editar_usuario(EntityManagerInterface $entityManager, Request $request, UsuarioRepository $usuarioRepository, int $id): JsonResponse
     {
-        $json = json_decode($request-> getContent(), true);
+        $json = json_decode($request->getContent(), true);
 
-        if (array_key_exists('rol', $json)) {
-            $rol = $json['rol'];
-        } else {
-            // Si la clave 'rol' no está presente, asignar un valor predeterminado o manejar el caso según tus necesidades
-            $rol = 'USER';
+        // Obtener el usuario por su ID
+        $usuario = $usuarioRepository->find($id);
+
+        // Verificar si el usuario existe
+        if (!$usuario) {
+            return $this->json(['error' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
         }
+
+        // Obtener el valor de 'rol' del JSON
+        $rol = $json['rol'] ?? 'USER';
+
+        // Actualizar los datos del usuario
         $usuario->setNombre($json["nombre"]);
         $usuario->setApellido($json["apellido"]);
+        $usuario->setNick($json["nick"]);
         $usuario->setContrasenya($json["contrasenya"]);
         $usuario->setCorreo($json["correo"]);
         $usuario->setFoto($json["foto"]);
-        $usuario->setFechanacimiento($json["fecha_nacimiento"]);
-        $usuario->setRol($rol);
 
+        // Convertir la cadena de texto de fecha de nacimiento en un objeto DateTime
+        $fechaNacimiento = new DateTime($json["fechaNacimiento"]);
+        $usuario->setFechanacimiento($fechaNacimiento);
+
+        $usuario->setRol($rol);
 
         $entityManager->flush();
 
-        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
+        return $this->json(['message' => 'Usuario modificado'], Response::HTTP_OK);
     }
     #[Route('/{id}', name: "delete_by_id", methods: ["DELETE"])]
     public function deleteById_usuario(EntityManagerInterface $entityManager, Usuario $usuario):JsonResponse
