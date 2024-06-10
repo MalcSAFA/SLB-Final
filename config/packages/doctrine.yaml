@@ -1,10 +1,10 @@
 doctrine:
     dbal:
         driver: 'pdo_pgsql'
-        server_version: '16.1'
+        server_version: '16.2.0'
         charset: utf8
         dbname: 'postgres'
-        user: 'migue'
+        user: 'postgres'
         password: 'safareyes1234'
         host: 'localhost'
         port: '5432'

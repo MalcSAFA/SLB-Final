@@ -37,7 +37,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $foto = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, name: "fecha_nacimiento")]
     private ?\DateTimeInterface $fecha_nacimiento = null;
 
     #[ORM\Column(length: 255)]
@@ -132,9 +132,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->fecha_nacimiento;
     }
 
-    public function setFechaNacimiento(\DateTimeInterface $fecha_nacimiento): static
+    public function setFechaNacimiento(string $fecha_nacimiento): static
     {
-        $this->fecha_nacimiento = $fecha_nacimiento;
+        $this->fecha_nacimiento = \DateTime::createFromFormat('Y-m-d', $fecha_nacimiento);
 
         return $this;
     }

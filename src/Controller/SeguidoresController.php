@@ -2,12 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Notificaciones;
-use App\Entity\Perfil;
 use App\Entity\Seguidores;
-use App\Entity\Usuario;
-use App\Repository\NotificacionesRepository;
-use App\Repository\SeguidoresRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,51 +14,59 @@ use Symfony\Component\Routing\Annotation\Route;
 class SeguidoresController extends AbstractController
 {
     #[Route('', name: "seguidores_list", methods: ["GET"])]
-    public function list_seguidores(SeguidoresRepository $seguidoresRepository):JsonResponse
+    public function list_seguidores(EntityManagerInterface $entityManager): JsonResponse
     {
+        $seguidoresRepository = $entityManager->getRepository(Seguidores::class);
         $list = $seguidoresRepository->findAll();
 
         return $this->json($list);
     }
+
     #[Route('', name: "crear_seguidores", methods: ["POST"])]
-    public function crear_seguidores(EntityManagerInterface $entityManager, Request $request):JsonResponse
+    public function crear_seguidores(EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $json = json_decode($request-> getContent(), true);
+        $json = json_decode($request->getContent(), true);
 
         $nuevoseguidor = new Seguidores();
-        $nuevoseguidor->setSeguidores($json["seguidores"]);
-        $nuevoseguidor->setSeguidos($json["seguidos"]);
-
-        $perfil = $entityManager->getRepository(Perfil::class)->findOneBy(["id"=> $json["id_perfil"]]);
-        $nuevoseguidor->setPerfil($perfil);
+        $nuevoseguidor->setIdUsuarioSeguidor($json["idUsuarioSeguidor"]);
+        $nuevoseguidor->setIdUsuarioSeguido($json["idUsuarioSeguido"]);
+        $nuevoseguidor->setFechaSeguimiento(new \DateTime());
 
         $entityManager->persist($nuevoseguidor);
         $entityManager->flush();
 
-        return $this->json(['message' => 'Clase creada'], Response::HTTP_CREATED);
+        return $this->json(['message' => 'Seguidor creado'], Response::HTTP_CREATED);
     }
+
     #[Route('/{id}', name: "editar_seguidores", methods: ["PUT"])]
-    public function editar_seguidores(EntityManagerInterface $entityManager, Request $request, Seguidores $seguidores):JsonResponse
+    public function editar_seguidores(EntityManagerInterface $entityManager, Request $request, Seguidores $seguidores): JsonResponse
     {
-        $json = json_decode($request-> getContent(), true);
+        $json = json_decode($request->getContent(), true);
 
-        $seguidores->setSeguidores($json["seguidores"]);
-        $seguidores->setSeguidos($json["seguidos"]);
-
-        $perfil = $entityManager->getRepository(Perfil::class)->findBy(["id"=> $json["id_perfil"]]);
-        $seguidores->setPerfil($perfil[0]);
-
+        $seguidores->setIdUsuarioSeguidor($json["id_usuario_seguidor"]);
+        $seguidores->setIdUsuarioSeguido($json["id_usuario_seguido"]);
 
         $entityManager->flush();
 
-        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
+        return $this->json(['message' => 'Seguidor modificado'], Response::HTTP_OK);
     }
-    #[Route('/{id}', name: "delete_by_id", methods: ["DELETE"])]
-    public function deleteById_seguidores(EntityManagerInterface $entityManager, Seguidores $notificaciones):JsonResponse
+
+
+    #[Route('/{id}', name: "delete_by_id_seguidores", methods: ["DELETE"])]
+    public function deleteById_seguidores(EntityManagerInterface $entityManager, int $id): JsonResponse
     {
-        $entityManager->remove($notificaciones);
+        // Buscar el RT en la base de datos
+        $seguidores = $entityManager->getRepository(Seguidores::class)->find($id);
+
+        // Verificar si se encontró el RT
+        if (!$seguidores) {
+            return $this->json(['message' => 'No se encontró el RT con el ID proporcionado'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Eliminar el RT
+        $entityManager->remove($seguidores);
         $entityManager->flush();
 
-        return $this->json(['message' => 'Clase eliminada'], Response::HTTP_OK);
+        return $this->json(['message' => 'RT eliminado correctamente'], Response::HTTP_OK);
     }
 }

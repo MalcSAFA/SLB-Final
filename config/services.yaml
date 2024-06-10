@@ -11,6 +11,14 @@ services:
     App\Entity\Tweets:
         public: true
     App\Entity\Respuestas: ~
+    App\Entity\Likes: ~
+    App\Entity\Rt: ~
+    App\Entity\Seguidores: ~
+    App\Entity\Perfil: ~
+    App\Entity\Lista: ~
+    App\Entity\UsuarioLista: ~
+
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

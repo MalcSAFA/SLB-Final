@@ -6,61 +6,60 @@ use App\Repository\SeguidoresRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeguidoresRepository::class)]
-#[ORM\Table(name: "seguidores",schema: "public")]
+#[ORM\Table(name: "seguidores", schema: "public")]
 class Seguidores
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $seguidores = null;
+    #[ORM\Column(name: "id_usuario_seguidor", type: 'integer')]
+    private ?int $idUsuarioSeguidor = null;
 
-    #[ORM\Column]
-    private ?int $seguidos = null;
+    #[ORM\Column(name: "id_usuario_seguido", type: 'integer')]
+    private ?int $idUsuarioSeguido = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: "id_perfil",nullable: false)]
-    private ?Perfil $perfil = null;
+    #[ORM\Column(name: "fecha_seguimiento", type: 'datetime')]
+    private ?\DateTimeInterface $fechaSeguimiento;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSeguidores(): ?int
+    public function getIdUsuarioSeguidor(): ?int
     {
-        return $this->seguidores;
+        return $this->idUsuarioSeguidor;
     }
 
-    public function setSeguidores(int $seguidores): static
+    public function setIdUsuarioSeguidor(int $idUsuarioSeguidor): static
     {
-        $this->seguidores = $seguidores;
+        $this->idUsuarioSeguidor = $idUsuarioSeguidor;
 
         return $this;
     }
 
-    public function getSeguidos(): ?int
+    public function getIdUsuarioSeguido(): ?int
     {
-        return $this->seguidos;
+        return $this->idUsuarioSeguido;
     }
 
-    public function setSeguidos(int $seguidos): static
+    public function setIdUsuarioSeguido(int $idUsuarioSeguido): static
     {
-        $this->seguidos = $seguidos;
+        $this->idUsuarioSeguido = $idUsuarioSeguido;
 
         return $this;
     }
 
-    public function getPerfil(): ?Perfil
+    public function getFechaSeguimiento(): ?\DateTimeInterface
     {
-        return $this->perfil;
+        return $this->fechaSeguimiento;
     }
 
-    public function setPerfil(?Perfil $perfil): static
+    public function setFechaSeguimiento(\DateTimeInterface $fechaSeguimiento): static
     {
-        $this->perfil = $perfil;
+        $this->fechaSeguimiento = $fechaSeguimiento;
 
         return $this;
     }

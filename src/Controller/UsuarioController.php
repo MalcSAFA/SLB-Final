@@ -92,10 +92,8 @@ class UsuarioController extends AbstractController
         $usuario->setContrasenya($json["contrasenya"]);
         $usuario->setCorreo($json["correo"]);
         $usuario->setFoto($json["foto"]);
+        $usuario->setFechaNacimiento($json['fechaNacimiento']);
 
-        // Convertir la cadena de texto de fecha de nacimiento en un objeto DateTime
-        $fechaNacimiento = new DateTime($json["fechaNacimiento"]);
-        $usuario->setFechanacimiento($fechaNacimiento);
 
         $usuario->setRol($rol);
 

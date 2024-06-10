@@ -21,6 +21,10 @@ class Respuestas
     #[ORM\JoinColumn(name: "id_tweet", nullable: false)]
     private ?Tweets $tweet = null;
 
+    #[ORM\ManyToOne( targetEntity: Usuario::class)]
+    #[ORM\JoinColumn(name: "id_usuario", nullable: false)]
+    private Usuario $usuario;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -48,5 +52,15 @@ class Respuestas
         $this->tweet = $tweet;
 
         return $this;
+    }
+
+    public function getUsuario(): Usuario
+    {
+        return $this->usuario;
+    }
+
+    public function setUsuario(Usuario $usuario): void
+    {
+        $this->usuario = $usuario;
     }
 }

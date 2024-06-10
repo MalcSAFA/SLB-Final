@@ -47,25 +47,51 @@ class PerfilController extends AbstractController
         return $this->json(['message' => 'Clase creada'], Response::HTTP_CREATED);
     }
     #[Route('/{id}', name: "editar_perfil", methods: ["PUT"])]
-    public function editar_perfil(EntityManagerInterface $entityManager, Request $request, Perfil $perfil):JsonResponse
+    public function editar_perfil(EntityManagerInterface $entityManager, Request $request, PerfilRepository $perfilRepository, int $id): JsonResponse
     {
-        $json = json_decode($request-> getContent(), true);
+        $json = json_decode($request->getContent(), true);
 
-        $perfil = new Clase();
-        $perfil->setTexto($json["texto"]);
-        $perfil->setLink($json["link"]);
-        $perfil->setFechaPublicacion($json["fecha_publicacion"]);
+        // Obtener el perfil por su ID
+        $perfil = $perfilRepository->find($id);
 
-        $usuario = $entityManager->getRepository(Usuario::class)->findBy(["id"=> $json["id_usuario"]]);
-        $perfil->seTweet($usuario[0]);
+        // Verificar si el perfil existe
+        if (!$perfil) {
+            return $this->json(['error' => 'Perfil no encontrado'], Response::HTTP_NOT_FOUND);
+        }
 
-        $tweet = $entityManager->getRepository(Tweets::class)->findBy(["id"=> $json["id_tweet"]]);
-        $perfil->setTweet($tweet[0]);
+        // Actualizar los datos del perfil
+        $perfil->setSubidas($json["subidas"] ?? $perfil->getSubidas());
+        $perfil->setEstado($json["estado"] ?? $perfil->getEstado());
+
+        // Obtener y asignar el usuario asociado
+        if (isset($json["id_usuario"])) {
+            $usuario = $entityManager->getRepository(Usuario::class)->find($json["id_usuario"]);
+            if ($usuario) {
+                $perfil->setUsuario($usuario);
+            } else {
+                return $this->json(['error' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
+            }
+        }
+
+        // Obtener y asignar el tweet asociado
+        if (isset($json["id_tweet"])) {
+            $tweet = $entityManager->getRepository(Tweets::class)->find($json["id_tweet"]);
+            if ($tweet) {
+                $perfil->setTweets($tweet);
+            } else {
+                return $this->json(['error' => 'Tweet no encontrado'], Response::HTTP_NOT_FOUND);
+            }
+        }
 
         $entityManager->flush();
 
-        return $this->json(['message' => 'Clase modificada'], Response::HTTP_OK);
+        return $this->json(['message' => 'Perfil modificado'], Response::HTTP_OK);
     }
+
+
+
+
+
     #[Route('/{id}', name: "delete_by_id", methods: ["DELETE"])]
     public function deleteById_perfil(EntityManagerInterface $entityManager, Perfil $perfil):JsonResponse
     {
